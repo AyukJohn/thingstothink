@@ -98,7 +98,7 @@
 
                   
 
-                    <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example" style="margin-left: 60%;">
                         <ul class="pagination">
                             <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
                             <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.prev_page_url)">Previous</a>
