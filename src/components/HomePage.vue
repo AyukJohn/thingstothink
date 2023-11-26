@@ -116,56 +116,37 @@
 
 
         methods: {
-            loginAdmin(){
-                // console.log(this.email);
-                // console.log(this.password);
-                
-                
-                fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
-
-                    method: "POST",
-                    // mode: 'no-cors',
-                    headers: {
-                    "Accept":"application/json",
-                    "Content-Type": "application/json",
-                    },
-
-                    body:JSON.stringify({
-                        email:this.email,
-                        password:this.password  
-                    })
-                    })
-                    .then(res => res.json())
-                    .then((res) => {
-
-                       
-                        
-
-                        if (!res.access_token) {
-                            this.error = res.error
-                        }
-                        else{
-                             localStorage.setItem('adminlogin', res.access_token);
-                            
-                           
-                             this.$router.push({name:'dashboard'})
-                        }
-
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        this.error = "An error occurred. Please try again.";
+            async loginAdmin() {
+                try {
+                    const response = await fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: this.email,
+                            password: this.password
                         })
-                    .finally(() => {
-                        this.loading = false; // Set loading to false when the request completes (success or failure)
                     });
 
-                    
+                    const res = await response.json();
 
-
-
+                    if (!res.access_token) {
+                        this.error = res.error;
+                    } else {
+                        localStorage.setItem('adminlogin', res.access_token);
+                        this.$router.push({ name: 'dashboard' });
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    this.error = "An error occurred. Please try again.";
+                } finally {
+                    this.loading = false;
+                }
             }
         },
+
     }
 
 

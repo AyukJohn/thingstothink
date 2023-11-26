@@ -56,47 +56,49 @@
 
             
 
-                <div class="bg-light container"  style="width: 95%; height: 64vh !important">
+                <div class="bg-light container mt-5"  style="width: 95%; height: 64vh !important; overflow-y: auto;">
 
                     <div class="container" style="width: 88%;">
-                        <div class="d-flex align-items-center justify-content-between mt-5 mb-5" >
-                            <img src="" alt="image here" style="margin-top: 5%;">
-                            <h5 style="margin-top: 5%;">John Ayuk</h5>
-                            <h6 style="margin-top: 5%;">Verified</h6>
+
+                        <div class="row mt-5 mb-5">
+
+                            <div class="col-md-3">
+
+                            </div>
+
+                            <div class="col-md-3">
+                                
+                            </div>
+
+                            <div class="col-md-3">
+                                
+                            </div>
+
+                            <div class="col-md-3">
+                                
+                            </div>
+
+                            <div class="col-md-3">
+                                
+                            </div>
+
+                        </div>
+
+
+                        <div v-for="user in userList" :key="user.id" class="d-flex align-items-center justify-content-between mt-5 mb-5" >
+                            <!-- <img :src="user.image" alt="image here" style="margin-top: 5%;"> -->
+                            <div class="user-avatar">
+                                <img :src="user.image" alt="image here">
+                            </div>
+                            <h5 style="margin-top: 5%;">{{ user.first_name }}</h5>
+                            <div v-if="user.verified === 'Yes'" class="d-flex align-items-center">
+                                <img class="img2" src="@/assets/verified.svg" alt="Verified Icon">
+                                <h6 class="mt-2">Verified</h6>
+                            </div>
                             <button class="btn  btn-small text-light" style=" width: 120px; margin-top: 5%; background-color: #D6A12B">View All</button>
-                        </div>
-        
-                        <div class="d-flex justify-content-between" style="margin-top: 5%;">
-                            <img src="" alt="image here">
-                            <h5>John Ayuk</h5>
-                            <h6>Verified</h6>
-                            <button class="btn  btn-small text-light" style=" width:120px; background-color: #D6A12B">View All</button>
-                        </div>
-        
-                        <div class="d-flex justify-content-between" style="margin-top: 5%;">
-                            <img src="" alt="image here">
-                            <h5>John Ayuk</h5>
-                            <h6>Verified</h6>
-                            <button class="btn  btn-small text-light" style=" width:120px; background-color: #D6A12B">View All</button>
-                        </div>
-        
-                        <div class="d-flex justify-content-between" style="margin-top: 5%;">
-                            <img src="" alt="image here">
-                            <h5>John Ayuk</h5>
-                            <h6>Verified</h6>
-                            <button class="btn  btn-small text-light" style=" width:120px; background-color: #D6A12B">View All</button>
-                        </div>
-        
-                        <div class="d-flex justify-content-between" style="margin-top: 5%; margin-bottom: 5% !important;">
-                            <img src="" alt="image here">
-                            <h5>John Ayuk</h5>
-                            <h6>Verified</h6>
-                            <button class="btn  btn-small text-light" style=" width:120px; background-color: #D6A12B">View All</button>
                         </div>
                     </div>
                    
-                    
-
                 </div>
 
          
@@ -113,23 +115,55 @@
 export default {
     data() {
         return {
-        showDropdown: false,
-        selectedOption: { label: 'Select Location', value: '' },
-        options: [
-            { label: 'Option 1', value: 'option1' },
-            { label: 'Option 2', value: 'option2' },
-            { label: 'Option 3', value: 'option3' }
-        ]
+            showDropdown: false,
+            selectedOption: { label: 'Select Location', value: '' },
+            options: [
+                { label: 'Option 1', value: 'option1' },
+                { label: 'Option 2', value: 'option2' },
+                { label: 'Option 3', value: 'option3' }
+            ],
+
+            userList: []
         };
     },
+
+    mounted() {
+        this.fetchUserList()
+    },
+
     methods: {
         toggleDropdown() {
-        this.showDropdown = !this.showDropdown;
+            this.showDropdown = !this.showDropdown;
         },
         selectOption(option) {
-        this.selectedOption = option;
-        this.showDropdown = false;
+            this.selectedOption = option;
+            this.showDropdown = false;
+        },
+
+        async fetchUserList(){
+            try {
+
+                const token = localStorage.getItem('adminlogin');
+                const res = await fetch('https://stagingapp2.fintabng.com/api/v1/admin/users',{
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error('Network was Not ok');
+                }
+                const data = await res.json();
+                // console.log(data.data);
+                this.userList = data.data;
+                
+            } catch (error) {
+                console.log('There was a pronlem fetching the userlist:',error.message);
+            }
         }
+
     }
 };
 
@@ -212,6 +246,20 @@ export default {
     .form-select:hover {
         background-color: #fff !important;
         border: none !important;
+    }
+
+
+    .user-avatar {
+        width: 40px; /* Adjust the size of the container */
+        height: 40px; /* Adjust the size of the container */
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .user-avatar img {
+        width: 100%; /* Ensure the image fills the container */
+        height: auto; /* Maintain aspect ratio */
+        display: block;
     }
 
 
