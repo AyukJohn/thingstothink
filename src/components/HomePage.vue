@@ -124,7 +124,7 @@
                 fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
 
                     method: "POST",
-                    mode: 'no-cors',
+                    // mode: 'no-cors',
                     headers: {
                     "Accept":"application/json",
                     "Content-Type": "application/json",
