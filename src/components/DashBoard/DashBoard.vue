@@ -2,8 +2,7 @@
 
     <div class="d-flex flex-row ">
         
-        <div class="sidebar">
-            
+        <div class="sidebar" style="padding: 20px; padding-top: 0%">          
 
             <img src="../icons/logo.svg" alt="" class="mt-4">
 
@@ -52,11 +51,11 @@
 
 
 
-        <div class="header">
+        <div class="header" v-if="!isUsersProfileRoute">
 
           
             <nav class="navbar navbar-expand-sm">
-                <a class="navbar-brand" href="#" style="padding-left: 2%;">DashBoard</a>
+                <a class="navbar-brand" href="#" style="padding-left: 2%;">Dashboard</a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -92,7 +91,7 @@
 
                 
 
-                <div class="container" v-if="!isUsersRoute">
+                <div class="container" >
 
                     <div class="mt-3">
                         <h4 style="padding-left: 1%;">Welcome, <span>John</span></h4>
@@ -254,13 +253,20 @@
 
                 </div>
 
-
+<!-- 
                 <div v-if="isUsersRoute">
                 <router-view></router-view>
+                </div> -->
+                
                 </div>
             </div>
 
+            <!-- <div v-if="isUsersTodoRoute">
+            <router-view></router-view> -->
 
+            <div v-if="isUsersProfileRoute">
+            <router-view></router-view>
+        
         </div>
 
     </div>
@@ -293,9 +299,19 @@
 
         computed: {
             // Check if the current route contains '/users'
-            isUsersRoute() {
-            return this.$route.path.includes('/users');
+            // isUsersRoute() {
+            // return this.$route.path.includes('/users');
+            // },
+
+            // check if the current route  contains '/usersTodo'
+            // isUsersTodoRoute() {
+            // return this.$route.path.includes('usersTodo');
+
+            // check if the current route  contains '/usersTodo'
+            isUsersProfileRoute() {
+            return this.$route.path.includes('usersProfile');
             },
+
 
 
             formattedDate() {

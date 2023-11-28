@@ -25,6 +25,7 @@ a,
   body {
     display: flex;
     place-items: center;
+    
   }
 
   #app {
@@ -32,4 +33,9 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
+}
+.nav-link:hover{
+  background-color: rgb(252, 112, 31) !important;
+  width: 100px !important;
+  height: 60px !important;
 }
