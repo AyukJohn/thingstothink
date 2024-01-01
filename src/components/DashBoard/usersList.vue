@@ -1,6 +1,9 @@
 <template>
     <div>
-        
+
+        <div v-if="!isUserProfileRoute">
+
+            
             <div class="d-flex justify-content-center" style="margin-top: 2%;">
 
                                                 
@@ -56,13 +59,13 @@
 
             
 
-                <div class="bg-light container mt-5"  style="width: 95%; height: 64vh !important; overflow-y: auto;">
+                <div class="bg-light container mt-5"   style="width: 95%; height: 64vh !important; overflow-y: auto;">
 
                     <div  v-for="user in userList" :key="user.id" class="container" style="width: 88%;">
 
                         <div class="row mt-5 mb-5">
-                        
-
+                            
+                            
                             <div class="col-md-3">
                                 <div class="user-avatar">
                                     <img :src="user.image" alt="image here">
@@ -72,7 +75,7 @@
                             <div class="col-md-3">
                                 <h5 style="margin-top: 5%;">{{ user.first_name }}</h5> 
                             </div>
-
+                            
                             <div class="col-md-3"> 
                                 <div v-if="user.verified === 'Yes'" class="d-flex align-items-center">
                                     <img class="img2" src="@/assets/verified.svg" alt="Verified Icon">
@@ -81,9 +84,13 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <button class="btn  btn-small text-light" style=" width: 120px; margin-top: 5%; background-color: #D6A12B">View All</button>
-                            </div>
+                                <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style=" width: 120px; margin-top: 5%; background-color: #D6A12B">
+                                    
+                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" style="margin-left: 10%;">View All</router-link>
 
+                                </button>
+                            </div>
+                            
                           
 
                         </div>
@@ -94,40 +101,51 @@
                     </div>
                     
                 
-
-
-                  
+                    
+                    
+                    
 
                     <nav aria-label="Page navigation example" style="margin-left: 60%;">
                         <ul class="pagination">
                             <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
                             <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.prev_page_url)">Previous</a>
-                            </li>
-
-                            <li class="page-item disabled">
+                        </li>
+                        
+                        <li class="page-item disabled">
                             <a class="page-link text-dark" href="#">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
                             </li>
-
+                            
                             <li v-bind:class="[{ disabled: !pagination.next_page_url }]" class="page-item">
                             <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.next_page_url)">Next</a>
-                            </li>
+                        </li>
                         </ul>
                     </nav>
 
                 </div>
 
          
+                
+        </div>
 
-         
+
+                <div v-if="isUserProfileRoute">
+                <router-view></router-view>
+                </div>
                 
 
+                
+                
+                
     </div>
 </template>
 
 
 <script>
+import router from '../../router';
+
 
 export default {
+
     data() {
         return {
             showDropdown: false,
@@ -142,6 +160,16 @@ export default {
             pagination: {},
         };
     },
+
+    computed: {
+
+        isUserProfileRoute() {
+                return this.$route.path.includes('/userProfile');
+            },
+    },
+
+
+
 
     mounted() {
         this.fetchUserList()
@@ -160,7 +188,7 @@ export default {
             try {
 
                 const token = localStorage.getItem('adminlogin');
-                page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/users';
+                page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/users';
                 const res = await fetch(page_url ,{
                     method: "GET",
                     headers: {
@@ -173,8 +201,11 @@ export default {
                     throw new Error('Network was Not ok');
                 }
                 const data = await res.json();
-                console.log(data.links);
+                // console.log(data.user_count);
                 this.userList = data.data;
+                console.log(data.data);
+                localStorage.setItem('userCount', data.user_count);
+
                 this.makePagination(data.meta, data.links);
 
             } catch (error) {
@@ -194,7 +225,50 @@ export default {
             this.pagination = pagination;
         },
 
+
+
+
+
+
+        async viewUserDetails(userId) {
+            try {
+                const token = localStorage.getItem('adminlogin');
+                const userDetailsUrl = `http://127.0.0.1:8000/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
+
+                // console.log(token);
+                const res = await fetch(userDetailsUrl, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error('Network was not okay');
+                }
+
+                const userData = await res.json();
+                var list = userData.user
+
+                console.log('User Details:', list);
+
+                localStorage.setItem('userProfile', JSON.stringify(list));
+                // this.$router.push({ name: 'userProfile' });
+                // this.$router.push({ name: 'userProfile', params: { userId }, query: { userProfile } });
+
+                
+                // Process the retrieved user data here
+            } catch (error) {
+                console.error('Error fetching user details:', error.message);
+            }
+        },
+
+
     }
+
+
+
 };
 
 </script>
@@ -292,5 +366,11 @@ export default {
         display: block;
     }
 
+
+    /* .div1{
+        background-image: url('../../assets/bg1.svg');
+        background-size: cover;
+        background-position: center; 
+    } */
 
 </style>

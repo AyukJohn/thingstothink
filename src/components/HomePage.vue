@@ -118,7 +118,7 @@
         methods: {
             async loginAdmin() {
                 try {
-                    const response = await fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
+                    const response = await fetch("http://127.0.0.1:8000/api/v1/admin/loginAdmin", {
                         method: "POST",
                         headers: {
                             "Accept": "application/json",
@@ -179,7 +179,7 @@
 .row1{
     margin: 0% !important;
     padding: 0% !important;
-    height: 10%;
+    height: auto;
 }
 
 #form{

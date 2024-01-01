@@ -5,6 +5,11 @@ import { createRouter,createWebHashHistory} from "vue-router";
 import Admin from '../components/HomePage.vue'
 import DashBoard from '../components/DashBoard/DashBoard.vue'
 import Users from '../components/DashBoard/usersList.vue'
+import Consultation from '../components/DashBoard/Consultation.vue'
+import Survey from '../components/DashBoard/Survey.vue'
+import Profile from '../components/DashBoard/userProfile.vue'
+
+
 
 // import Loader from '../components/extras/Loader.vue'
 
@@ -25,18 +30,49 @@ const routes = [
         name: "dashboard",
         component: DashBoard,
         children: [
-            {
-              path: 'users', // Nested route path
-              component: Users
+
+          {
+            path: "consultation",
+            name: "consultation",
+            component: Consultation,
+          },
+
+          {
+            path: "users",
+            name: "users",
+            component: Users,
+
+            children: [
+              
+            {   path: ":userId",
+                name: "userProfile",
+                component: Profile,
+                props: true, 
             }
-          ]
+
+            ]
+          },
+
+          {
+            path: "survey",
+            name: "survey",
+            component: Survey,
+          },
+
+        ]
     },
 
-    {
-        path: "/users",
-        name: "users",
-        component: Users,
-    },
+    // {
+    //     path: "/users",
+    //     name: "users",
+    //     component: Users,
+    // },
+
+    // {
+    //   path: "/consultation",
+    //   name: "consultation",
+    //   component: Consultation,
+    // },
 
 
     // {

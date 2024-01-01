@@ -15,7 +15,7 @@
                  <img class="img2" src="../icons/layout-grid.svg" alt="" >
                    
                     <!-- <a class="nav-link" href="#" style="margin-left: 10%;">DashBoard</a> -->
-                    <router-link to="/dashboard" class="nav-link" style="margin-left: 10%;">DashBoard</router-link>
+                    <router-link to="/dashboard" class="nav-link" style="margin-left: 10%;">Dashboard</router-link>
 
 
                 </li>
@@ -33,7 +33,9 @@
                 <li class="d-flex flex-row mt-2">
                     <img class="img2" src="../icons/user-question-01.svg" alt="" >
 
-                    <a class="nav-link" :class="img2" href="#" style="margin-left: 10%;">Consultation</a>
+                    <router-link to="/dashboard/consultation" class="nav-link" href="#" style="margin-left: 10%;">Consultation</router-link>
+
+                    <!-- <a class="nav-link" :class="img2" href="#" style="margin-left: 10%;">Consultation</a> -->
                 </li>
 
 
@@ -42,7 +44,16 @@
                 <li class="d-flex flex-row mt-2">
                     <img class="img2"  src="../icons/dashboard.svg" alt="" >
 
-                    <a class="nav-link"  href="#" style="margin-left: 10%;">Survey Query</a>
+                   
+                    <router-link to="/dashboard/survey" class="nav-link" href="#" style="margin-left: 10%;">Surveys</router-link>
+
+                </li>
+
+
+
+                <li  @click="logout" class="clickable" style="margin-top: 200%;">
+                    <img class="img2"  src="../icons/logout.svg" alt="" >
+                    logout
                 </li>
 
             </ul>
@@ -56,7 +67,9 @@
 
           
             <nav class="navbar navbar-expand-sm">
-                <a class="navbar-brand" href="#" style="padding-left: 2%;">DashBoard</a>
+                <a class="navbar-brand" href="#" style="padding-left: 2%;">
+                    {{ routeText }}
+                </a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -92,7 +105,7 @@
 
                 
 
-                <div class="container" v-if="!isUsersRoute">
+                <div class="container" v-if="!isUsersRoute && !isConsultationRoute && !isSurveyRoute">
 
                     <div class="mt-3">
                         <h4 style="padding-left: 1%;">Welcome, <span>John</span></h4>
@@ -116,10 +129,13 @@
                                             
                                             </a>
                                             <!-- <a href="#" class="b">Another link</a> -->
-                                            <button class="btn btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">View All</button>
+                                            <button class="btn btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">
+                                                <router-link to="/dashboard/users" class="nav-link" href="#">View All</router-link>
+                                            </button>
                                         </div>
                                         <h5 class="card-title mt-3">Users</h5>
-                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">Card subtitle</h6>
+                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">{{ userCount }}
+                                        </h6>
                                     </div>
                                 </div>
                             
@@ -133,15 +149,35 @@
 
                                             </a>
                                             <!-- <a href="#" class="b">Another link</a> -->
-                                            <button class="btn btn-small text-light" style="margin-left: 55%; background-color: #D6A12B;">View All</button>
+                                            <button class="btn btn-small text-light" style="margin-left: 55%; background-color: #D6A12B;">
+                                                <router-link to="/dashboard/consultation" class="nav-link" href="#">View All</router-link>                                           
+                                            </button>
                                         </div>
                                         <h5 class="card-title mt-3">Consultations</h5>
-                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">Card subtitle</h6>
+                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">{{ BookingCount  }}</h6>
                                     </div>
                                 </div>
                            
 
 
+                                
+                                
+                                <div class="card cardo" style="width: 19rem;">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <a href="#" class="card-link">
+                                                <img src="@/assets/fluent_form-new-20-regular.svg" alt="" >
+                                            </a>
+                                            
+                                            <button class="btn  btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">
+                                                <router-link to="/dashboard/survey" class="nav-link" href="#">Surveys</router-link>                                     
+                                            </button>
+                                        </div>
+                                        <h5 class="card-title mt-3">Surveys</h5>
+                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">{{ surveyCount }}</h6>
+                                    </div>
+                                </div>
+                                
                                 <div class="card cardo" style="width: 19rem;">
                                     <div class="card-body">
                                         <div class="d-flex">
@@ -153,25 +189,9 @@
                                             <button class="btn  btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">View All</button>
                                         </div>
                                         <h5 class="card-title mt-3">Cash in Wallet</h5>
-                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">Card subtitle</h6>
+                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">${{ amountInWallet }}</h6>
                                     </div>
                                 </div>
-
-                          
-                                <div class="card cardo" style="width: 19rem;">
-                                    <div class="card-body">
-                                        <div class="d-flex">
-                                            <a href="#" class="card-link">
-                                             <img src="@/assets/fluent_form-new-20-regular.svg" alt="" >
-                                            </a>
-                                         
-                                            <button class="btn  btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">View All</button>
-                                        </div>
-                                        <h5 class="card-title mt-3">Applications</h5>
-                                        <h6 class="card-subtitle mb-2 mt-3 text-body-secondary">Card subtitle</h6>
-                                    </div>
-                                </div>
-
                         </div>
                     <!-- </div> -->
 
@@ -180,9 +200,10 @@
 
                     <div class="container mt-5">
                         <div class="d-flex">
-                            <h3>All Transaction</h3>
+                            <h5>Recent Transactions</h5>
                             <a href="#" class="btn btn-light" style="margin-left: 73%;"><h6>all transaction</h6></a>
                         </div>
+                       
                         <table class="table mt-3">
                             <thead>
                                 <tr>
@@ -192,78 +213,71 @@
                                 <th scope="col">Date</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Total Price</th>
+                                <th scope="col">....</th>
+
 
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Mark</td>
-                                    <td>Mark</td>
-                                    <td>Mark</td>
-                                    <td>Mark</td>
+                                <tr  v-for="transaction in list" :key="transaction.id">
+                                    <th scope="row">{{ transaction.id }}</th>
+                                    <td>{{ transaction.visaType }}</td>
+                                    <td>{{ transaction.fullName }} </td>
+                                    <td>{{ transaction.created_at }}</td>
+                                    <td>{{ transaction.status }}</td>
+                                    <td>{{ transaction.totalPrice }}</td>
+                                    <td>....</td>
                                 </tr>
-                                
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                </tr>
-
-                               
-
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td> 
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                    <td>Thornton</td>
-                                </tr>
-
-                              
-                                
                             </tbody>
                         </table>
+
+
+                        <nav aria-label="Page navigation example" style="margin-left: 60%;">
+                            <ul class="pagination">
+                                <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
+                                    <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.prev_page_url)">Previous</a>
+                                </li>
+
+                                <li class="page-item disabled">
+                                    <a class="page-link text-dark" href="#">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+                                </li>
+
+                                <li v-bind:class="[{ disabled: !pagination.next_page_url }]" class="page-item">
+                                    <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.next_page_url)">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+
                     </div>
 
 
 
                 </div>
 
+                
+              
+                <div v-if="isConsultationRoute">
+                <router-view></router-view>
+                </div>
 
                 <div v-if="isUsersRoute">
                 <router-view></router-view>
                 </div>
-            </div>
 
+                <div v-if="isSurveyRoute">
+                <router-view></router-view>
+                </div>
+
+               
+
+
+            </div>
 
         </div>
 
-    </div>
+     </div>
 
 
 
@@ -278,25 +292,59 @@
         name: 'Dashboard',
 
 
-        data() {
-            return {
-            currentDate: new Date()
+        data(){
+            return{
+            currentDate: new Date(),
+
+
+            userCount: 0, 
+            BookingCount: 0, 
+            // amountInWallet: [],
+
+            list: [],
+            pagination: {},
+
+
+            linkText: 'Dashboard'
+
             };
+
         },
 
 
 
-
-
-
-
-
-        computed: {
+        computed:{
             // Check if the current route contains '/users'
-            isUsersRoute() {
-            return this.$route.path.includes('/users');
+            
+            isConsultationRoute() {
+                return this.$route.path.includes('/consultation');
             },
 
+            isUsersRoute() {
+                return this.$route.path.includes('/users');
+            },
+
+            isSurveyRoute() {
+                return this.$route.path.includes('/survey');
+            },
+
+
+
+            routeText() {
+                switch (this.$route.name) {
+                    case 'users':
+                    return 'User';
+                    case 'consultation':
+                    return 'Consultation';
+                    case 'survey':
+                    return 'Survey';
+                    default:
+                    return 'Dashboard';
+                }
+            },
+           
+            
+            // isUsersRoute
 
             formattedDate() {
                 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -316,15 +364,109 @@
 
 
 
-        mounted() {
+        mounted(){
             let admin = localStorage.getItem('adminlogin');
             // console.log(user);
             if (!admin){
                 this.$router.push({name:'admin'})
-            }
-        }
+            };
 
-    }
+            this.fetchUserApplication()
+
+            const storedUserCount = localStorage.getItem('userCount');
+            if (storedUserCount){
+                this.userCount = storedUserCount; // Convert to number
+            };
+
+
+
+            const BookingCount = localStorage.getItem('bookingCount');
+            if (BookingCount) {
+                this.BookingCount = BookingCount; // Convert to number
+            }
+
+
+            const surveyCount = localStorage.getItem('surveyCount');
+            if (surveyCount) {
+                this.surveyCount = surveyCount; // Convert to number
+            }
+
+
+            const amountInWallet = localStorage.getItem('amountInWallet');
+            if (amountInWallet) {
+                this.amountInWallet = amountInWallet; // Convert to number
+            }
+
+        },
+
+
+
+
+        methods:{
+
+            logout(){
+                localStorage.removeItem('adminlogin');
+                this.$router.push({name:'admin'})
+
+                this.isLoggedIn = false;
+            },
+
+
+
+                async fetchUserApplication(page_url){
+                    try {
+
+                        const token = localStorage.getItem('adminlogin');
+                        page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/getUserVisaApplications';
+
+                        const res = await fetch(page_url ,{
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            }
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('Network was Not ok');
+                        }
+                        
+                        const data = await res.json();
+                        console.log(data);
+                        this.list = data.data;
+                        localStorage.setItem('applicationCount', data.application_count);
+
+                        // console.log(list);
+                        this.makePagination(data.meta, data.links);
+
+                        } catch (error) {
+                            console.log('There was a pronlem fetching the list:',error.message);
+                        }
+
+                    },
+
+
+                    makePagination(meta, links) {
+                        let pagination = {
+                            current_page: meta.current_page,
+                            last_page: meta.last_page,
+                            next_page_url: links.next,
+                            prev_page_url: links.prev
+                        };
+
+                        this.pagination = pagination;
+                    },
+
+
+                },
+
+
+
+
+
+
+        }
+    
 
 
 </script>
@@ -334,6 +476,20 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+
+
+    .clickable{
+        cursor: pointer;
+    }
+
+
+    th{
+        font-weight: 100;
+    }
+
+    td{
+        font-weight: bolder;
+    }
 
     .sidebar{
         /* background-color: blue; */
