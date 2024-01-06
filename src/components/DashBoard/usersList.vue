@@ -45,7 +45,7 @@
                             <img src="@/assets/filter.svg" alt="" style="margin-left: 5%;">
 
                             
-                            <button class="btn  btn-small text-light" style="margin-left: 25%; width: 180px; background-color: #D6A12B">View All</button>
+                            <button class="btn  btn-small text-light" style="margin-left: 25%; width: 120px; background-color: #D6A12B">Search</button>
 
                         </div>
                     </div>
@@ -84,9 +84,9 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style=" width: 120px; margin-top: 5%; background-color: #D6A12B">
+                                <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style=" width: 130px; margin-top: 5%; background-color: #D6A12B">
                                     
-                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" style="margin-left: 10%;">View All</router-link>
+                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" style="margin-left: 10%;">View Profile</router-link>
 
                                 </button>
                             </div>
@@ -188,7 +188,7 @@ export default {
             try {
 
                 const token = localStorage.getItem('adminlogin');
-                page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/users';
+                page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/users';
                 const res = await fetch(page_url ,{
                     method: "GET",
                     headers: {
@@ -233,7 +233,7 @@ export default {
         async viewUserDetails(userId) {
             try {
                 const token = localStorage.getItem('adminlogin');
-                const userDetailsUrl = `http://127.0.0.1:8000/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
+                const userDetailsUrl = `https://stagingapp2.fintabng.com/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
 
                 // console.log(token);
                 const res = await fetch(userDetailsUrl, {
@@ -254,6 +254,7 @@ export default {
                 console.log('User Details:', list);
 
                 localStorage.setItem('userProfile', JSON.stringify(list));
+                
                 // this.$router.push({ name: 'userProfile' });
                 // this.$router.push({ name: 'userProfile', params: { userId }, query: { userProfile } });
 

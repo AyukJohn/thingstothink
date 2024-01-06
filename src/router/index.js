@@ -8,6 +8,8 @@ import Users from '../components/DashBoard/usersList.vue'
 import Consultation from '../components/DashBoard/Consultation.vue'
 import Survey from '../components/DashBoard/Survey.vue'
 import Profile from '../components/DashBoard/userProfile.vue'
+import UserConsultation from '../components/DashBoard/userConsultation.vue'
+
 
 
 
@@ -41,14 +43,25 @@ const routes = [
             path: "users",
             name: "users",
             component: Users,
+            children:[
 
-            children: [
-              
-            {   path: ":userId",
-                name: "userProfile",
-                component: Profile,
-                props: true, 
-            }
+                {   path: ":userId",
+                    name: "userProfile",
+                    component: Profile,
+                    // props: true, 
+                    children:[
+
+                      {
+                        path: "userConsultation",
+                        name: "userConsultation",
+                        component: UserConsultation,
+                        // props: true,
+                      },
+
+
+                    ]
+
+                },
 
             ]
           },

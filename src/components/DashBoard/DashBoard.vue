@@ -81,17 +81,47 @@
                     </form>
 
 
-                    <div class="d-flex flex-row">
+                    <div class="d-flex flex-row" style="margin-left: 7%;">
+
+                        <!-- Example split danger button -->
+                           
+
+
+                        <div class="align-self-center">
+                            <img class="img2"  src="../icons/bell.svg" alt="" >
+
+                        </div>
+
                         <div class="align-self-center" style="margin-left: 20% !important;margin-top: 0% !important;">
+                            <img class="img2"  src="../icons/Avatar.svg" alt="" >
+                        </div>
+
+                        <div class="align-self-center" style="margin-left: 8% !important; margin-top: 10%;">
+                           <h6> {{ adminName ? adminName.name : 'No user profile found' }}.</h6>
+                            <p style="color: #64748B;">Administrator</p>
+                        </div>
+
+
+
+
+                        <div class="d-inline-block align-self-center dropdown" style="margin-left: 20% !important;">
+                            <div class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- <div>                                
+                                <img class="img2" src="../icons/chevron-down.svg" alt="">
+                                </div> -->
+                            </div>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+
+
+
                         
-                        ads
-                        </div>
-
-                        <div class="align-self-center" style="margin-left: 20% !important;">
-                            <p class="pt-3">Welcome Administrator</p>
-                        </div>
-
-                        <div class="align-self-center" style="margin-left: 20% !important;">Dropdown</div>
 
 
                     </div>
@@ -108,7 +138,7 @@
                 <div class="container" v-if="!isUsersRoute && !isConsultationRoute && !isSurveyRoute">
 
                     <div class="mt-3">
-                        <h4 style="padding-left: 1%;">Welcome, <span>John</span></h4>
+                        <h4 style="padding-left: 1%;">Welcome, <span>{{ adminName ? adminName.name : 'No user profile found' }}.</span></h4>
 
                         <div>
                             <p style="padding-left: 1%; font-weight: 100;">{{ formattedDate }}</p>
@@ -170,7 +200,7 @@
                                             </a>
                                             
                                             <button class="btn  btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">
-                                                <router-link to="/dashboard/survey" class="nav-link" href="#">Surveys</router-link>                                     
+                                                <router-link to="/dashboard/survey" class="nav-link" href="#">View</router-link>                                     
                                             </button>
                                         </div>
                                         <h5 class="card-title mt-3">Surveys</h5>
@@ -300,6 +330,7 @@
             userCount: 0, 
             BookingCount: 0, 
             // amountInWallet: [],
+            adminName:null,
 
             list: [],
             pagination: {},
@@ -333,11 +364,13 @@
             routeText() {
                 switch (this.$route.name) {
                     case 'users':
+                    return 'Users';
+                    case 'users/userProfile':
                     return 'User';
                     case 'consultation':
-                    return 'Consultation';
+                    return 'Consultations';
                     case 'survey':
-                    return 'Survey';
+                    return 'Surveys';
                     default:
                     return 'Dashboard';
                 }
@@ -397,6 +430,15 @@
                 this.amountInWallet = amountInWallet; // Convert to number
             }
 
+
+            let adminName = localStorage.getItem('adminName');
+            if (adminName) {
+            this.adminName = JSON.parse(adminName);
+                console.log(adminName);
+            } else {
+                console.log('No user profile found in localStorage');
+            }
+
         },
 
 
@@ -417,7 +459,7 @@
                     try {
 
                         const token = localStorage.getItem('adminlogin');
-                        page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/getUserVisaApplications';
+                        page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserVisaApplications';
 
                         const res = await fetch(page_url ,{
                             method: "GET",
@@ -551,13 +593,13 @@
         background-color: rgb(207, 205, 205); /* Set color of the border */
         /* Adjust height as needed */
         height: 30%;
-}
+    }
 
 
- .btn,h4,h5,h6{
-    font-family: 'Inter', serif;
+    .btn,h4,h5,h6{
+        font-family: 'Inter', serif;
 
-  }
+    }
 
 
 

@@ -5,7 +5,7 @@
 
             <div class="row">
 
-                <div class="col-md-9" style="margin-top: 1%;">
+                <div class="col-md-9" style="margin-top: 2%;">
                     <div class="container">
             
                         <div class="container">
@@ -21,8 +21,8 @@
                                             </div>
                                         </div>
                                     </div>
-                    
-                                   
+                
+                                
                                     <div class="wrapper">
                                         <div class="usernameWrapper">
                                             <h5  class="userName" v-if="userProfile">{{ userProfile.first_name }} {{ userProfile.last_name }}</h5>
@@ -34,7 +34,8 @@
                                         </div>
                                     </div>
             
-                                    <div class="wrapper2">
+
+                                    <div class="wrapper2" v-if="!isUserConsultationRoute">
                                         <form>
                                             <div class="container">
                                                 <div class="container">
@@ -65,6 +66,12 @@
                                             </div>
                                         </form>
                                     </div>
+
+                                   
+                                    <div v-if="isUserConsultationRoute">
+                                        <router-view></router-view>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -76,10 +83,74 @@
 
                     <div class="leftHolder">
                         <div>
-                            <h2>hello world</h2>
+                            <h6 class="userInfoTag">User Info</h6>
                         </div>
+
+
+
+                        
+                        <div class="userInfoWrapper">
+
+                           
+
+                            <ul class="userInfoUl">
+
+                                <li class="userInfoLi d-flex" @click="viewUserConsultation(userProfile.id), openModal">
+                                    <img class="img2" src="../icons/bx_calendar.svg" alt="">
+                            
+                                    
+                                    <router-link to="/dashboard/users/userProfile/userConsultation" class="nav-link" href="#" style="margin-left: 6%;">
+                                        <h6>Consultations</h6>
+                                    </router-link>
+
+                                </li>
+
+                                <li class="userInfoLi d-flex">
+                                    <img class="img2" src="../icons/fluent_form-new-20-regular.svg" alt="" >
+                                    <h6>Applications</h6>
+                                </li>
+
+                                <li class="userInfoLi d-flex">
+                                    <img class="img2" src="../icons/documents.svg" alt="" >
+                                    <h6>Documents</h6>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        
+
+                        <!-- Button trigger modal -->
+                        <button @click="openModal" class="btn btn-primary">
+                            Launch demo modal
+                        </button>
+
+
+                        <div class="modal" ref="exampleModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Modal title</h5>
+                                        <button @click="closeModal" type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Your modal content goes here -->
+                                        <!-- ... -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button @click="closeModal" type="button" class="btn btn-secondary">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
-                    
                 </div>
                 
 
@@ -97,6 +168,8 @@
 
 <script>
 
+
+
  export default{
 
     data() {
@@ -109,6 +182,13 @@
     },
 
 
+    computed: {
+            isUserConsultationRoute(){
+                return this.$route.path.includes('/userConsult');
+            },
+    },
+
+
     mounted() {
         let userProfile = localStorage.getItem('userProfile');
         if (userProfile) {
@@ -118,7 +198,74 @@
             console.log('No user profile found in localStorage');
         }
         
-    }
+    },
+
+    methods: {
+
+
+        openModal() {
+            this.$refs.exampleModal.classList.add('show');
+            this.$refs.exampleModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+        },
+        closeModal() {
+            this.$refs.exampleModal.classList.remove('show');
+            this.$refs.exampleModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        },
+
+
+
+        async viewUserConsultation(userId) {
+            try {
+                // Fetch user consultation data and update Vuex store
+                await this.fetchUserConsultation(userId);
+                this.$router.push('/userConsultation'); // Navigate to UserConsultation.vue
+            } catch (error) {
+                console.error('Error fetching user consultation:', error.message);
+            }
+        },
+
+
+
+
+
+        async viewUserConsultation(userId) {
+            try {
+                const token = localStorage.getItem('adminlogin');
+                const userDetailsUrl = `https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultationById/${userId}`; // Adjust the URL to fetch user details
+
+                // console.log(token);
+                const res = await fetch(userDetailsUrl, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error('Network was not okay');
+                }
+
+                const userData = await res.json();
+                var list = userData.bookings
+
+                console.log('User Details:', list);
+
+                localStorage.setItem('userConsultation', JSON.stringify(list));
+                
+                // this.$router.push({ name: 'userProfile' });
+                // this.$router.push({ name: 'userProfile', params: { userId }, query: { userProfile } });
+
+                
+                // Process the retrieved user data here
+            } catch (error) {
+                console.error('Error fetching user details:', error.message);
+            }
+        },
+        
+    },
 
  }
 
@@ -194,6 +341,7 @@
         background-color: #ffff;
     }
 
+    
     .profile-image {
         position: absolute;
         bottom: 0;
@@ -212,6 +360,34 @@
         height: auto; 
         display: block; 
         object-fit: cover;
+    }
+    
+    .userInfoTag{
+        padding-top: 16%;
+        padding-left: 10%;
+        color: #94A3B8;
+    }
+
+    .userInfoWrapper{
+        /* background-color: blue; */
+      margin-top: 15%;
+    }
+
+    .userInfoUl{
+        list-style: none;
+        margin-left: 5%;
+    }
+
+    .userInfoLi{
+        margin-top: 5%;
+        cursor: pointer;
+    }
+
+
+    .userInfoLi h6{
+        padding-left: 10%;
+        padding-top: 5%;
+        color: #0F172A;
     }
 
 

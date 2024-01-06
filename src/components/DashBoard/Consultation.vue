@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="container mt-5">
-                        <div class="d-flex">
-                            <h5>Consultations</h5>
-                        </div>
+                       
                        
                         <table class="table mt-3">
                             <thead>
@@ -131,7 +129,7 @@
                 try {
 
                     const token = localStorage.getItem('adminlogin');
-                    page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/getUserConsultations';
+                    page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultations';
                     const res = await fetch(page_url ,{
                         method: "GET",
                         headers: {

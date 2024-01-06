@@ -118,7 +118,7 @@
         methods: {
             async loginAdmin() {
                 try {
-                    const response = await fetch("http://127.0.0.1:8000/api/v1/admin/loginAdmin", {
+                    const response = await fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
                         method: "POST",
                         headers: {
                             "Accept": "application/json",
@@ -137,6 +137,12 @@
                     } else {
                         localStorage.setItem('adminlogin', res.access_token);
                         this.$router.push({ name: 'dashboard' });
+
+                        // console.log(res.admin.name);
+                        const admin = res.admin
+                        localStorage.setItem('adminName', JSON.stringify(admin));
+
+                        
                     }
                 } catch (error) {
                     console.error("Error:", error);
