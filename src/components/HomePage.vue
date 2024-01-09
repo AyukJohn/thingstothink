@@ -118,7 +118,7 @@
         methods: {
             async loginAdmin() {
                 try {
-                    const response = await fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
+                    const response = await fetch("https://stagingapp1.fintabng.com/api/v1/admin/loginAdmin", {
                         method: "POST",
                         headers: {
                             "Accept": "application/json",

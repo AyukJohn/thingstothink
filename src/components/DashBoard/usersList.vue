@@ -84,11 +84,26 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style=" width: 130px; margin-top: 5%; background-color: #D6A12B">
+                                <!-- <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)"  style=" width: 130px; margin-top: 5%; background-color: #D6A12B"> -->
                                     
-                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" style="margin-left: 10%;">View Profile</router-link>
+                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" @click="viewUserDetails(user.id)" data-id="user.id"  style="margin-left: 10%; width: 130px; margin-top: 5%; background-color: #D6A12B">
+                                        View Profile
+                                    </router-link>
 
-                                </button>
+                                <!-- </button> -->
+
+
+                                <!-- <button @click="viewUserDetails(user.id)">View Profile</button> -->
+
+                                <!-- <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" @click="viewUserDetails(user.id)" data-id="user.id" style="margin-left: 10%; width: 130px; margin-top: 5%; background-color: #D6A12B">
+                                        View Profile
+                                    </router-link> -->
+
+
+                                <!-- <router-link to="/dashboard/users/userProfile" tag="button" class="btn btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style="width: 130px; margin-top: 5%; margin-left: 10%; background-color: #D6A12B">
+                                    View Profile
+                                </router-link> -->
+                                
                             </div>
                             
                           
@@ -141,7 +156,8 @@
 
 
 <script>
-import router from '../../router';
+
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -161,18 +177,21 @@ export default {
         };
     },
 
-    computed: {
+  
 
+    computed: {
         isUserProfileRoute() {
-                return this.$route.path.includes('/userProfile');
-            },
+            return this.$route.path.includes('/userProfile');
+        },
     },
 
 
 
-
     mounted() {
-        this.fetchUserList()
+        this.fetchUserList();
+
+        // store.dispatch('fetchUserList');
+
     },
 
     methods: {
@@ -188,7 +207,7 @@ export default {
             try {
 
                 const token = localStorage.getItem('adminlogin');
-                page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/users';
+                page_url = page_url || 'https://stagingapp1.fintabng.com/api/v1/admin/users';
                 const res = await fetch(page_url ,{
                     method: "GET",
                     headers: {
@@ -226,14 +245,17 @@ export default {
         },
 
 
-
+    //     viewUserDetails(userId) {
+    // store.dispatch('fetchUserProfile', userId);
+    // this.$router.push('/userProfile');
+    //},
 
 
 
         async viewUserDetails(userId) {
             try {
                 const token = localStorage.getItem('adminlogin');
-                const userDetailsUrl = `https://stagingapp2.fintabng.com/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
+                const userDetailsUrl = `https://stagingapp1.fintabng.com/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
 
                 // console.log(token);
                 const res = await fetch(userDetailsUrl, {
@@ -255,9 +277,6 @@ export default {
 
                 localStorage.setItem('userProfile', JSON.stringify(list));
                 
-                // this.$router.push({ name: 'userProfile' });
-                // this.$router.push({ name: 'userProfile', params: { userId }, query: { userProfile } });
-
                 
                 // Process the retrieved user data here
             } catch (error) {
@@ -266,9 +285,7 @@ export default {
         },
 
 
-    }
-
-
+    },
 
 };
 

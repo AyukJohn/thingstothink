@@ -129,7 +129,7 @@
                 try {
 
                     const token = localStorage.getItem('adminlogin');
-                    page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultations';
+                    page_url = page_url || 'https://stagingapp1.fintabng.com/api/v1/admin/getUserConsultations';
                     const res = await fetch(page_url ,{
                         method: "GET",
                         headers: {

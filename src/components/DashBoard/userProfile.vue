@@ -123,9 +123,7 @@
                         
 
                         <!-- Button trigger modal -->
-                        <button @click="openModal" class="btn btn-primary">
-                            Launch demo modal
-                        </button>
+                       
 
 
                         <div class="modal" ref="exampleModal" tabindex="-1" role="dialog">
@@ -167,7 +165,7 @@
 
 
 <script>
-
+// import { mapActions } from 'vuex';
 
 
  export default{
@@ -189,6 +187,7 @@
     },
 
 
+
     mounted() {
         let userProfile = localStorage.getItem('userProfile');
         if (userProfile) {
@@ -197,7 +196,6 @@
         } else {
             console.log('No user profile found in localStorage');
         }
-        
     },
 
     methods: {
@@ -233,7 +231,7 @@
         async viewUserConsultation(userId) {
             try {
                 const token = localStorage.getItem('adminlogin');
-                const userDetailsUrl = `https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultationById/${userId}`; // Adjust the URL to fetch user details
+                const userDetailsUrl = `https://stagingapp1.fintabng.com/v1/admin/getUserConsultationById/${userId}`; // Adjust the URL to fetch user details
 
                 // console.log(token);
                 const res = await fetch(userDetailsUrl, {
