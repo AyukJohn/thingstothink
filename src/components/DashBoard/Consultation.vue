@@ -252,7 +252,7 @@
                         const token = localStorage.getItem('adminlogin');
                        
                         const res = await fetch(`https://stagingapp2.fintabng.com/api/v1/admin/upDateConsultation/${consultationId}` ,{
-                            method: "POST",
+                            method: "PUT",
                             headers: {
                                 "Accept": "application/json",
                                 "Content-Type": "application/json",

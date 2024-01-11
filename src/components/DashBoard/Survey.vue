@@ -21,7 +21,7 @@
                                 <th scope="col">Marital Status</th>
                                 <th scope="col">Level Of Education</th>
                                 <th scope="col">Health Related Concern ?</th>
-                                <th scope="col">....</th>
+                                
 
 
 
@@ -42,7 +42,7 @@
                                     <td>{{ consultation.marital_status }}</td>
                                     <td>{{ consultation.highest_level_of_education }}</td>
                                     <td>{{ consultation.any_sickness }}</td>
-                                    <td>....</td>
+                                    
                                 </tr>
                             </tbody>
                         </table>

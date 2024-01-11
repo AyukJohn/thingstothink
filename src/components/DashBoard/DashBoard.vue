@@ -329,12 +329,6 @@
                                                 </div>
                                             </div>
 
-
-                                            <div style="margin-top: 3%;">
-                                                <!-- <button type="submit" class="btn btn-primary">Schedule Consultation</button> -->
-                                                <button @click="closeModal" type="button" class="btn btn-danger">Close</button>
-                                            </div>
-
                                         </form>
 
 
@@ -342,16 +336,18 @@
 
 
 
-                                        <!-- <form @submit.prevent="upDateConsultation(selectedConsultation)">
+                                        <form @submit.prevent="updateApplication(selectedConsultation)" style="margin-top:20%;">
 
                                             <div class="form-group">
-                                                <label><h4>Set Time</h4></label>
-                                                <input v-model="time" type="time" class="form-control mt-2"  aria-describedby="emailHelp" placeholder="Time">
-                                            </div>
+                                                <label><h4>Update Status</h4></label>
 
-                                            <div class="form-group mt-4">
-                                                <label><h4>Set Date</h4></label>
-                                                <input v-model="date" type="date" class="form-control mt-2" placeholder="Date">
+                                                <select v-model="selectedOption" class="form-control" placeholder="hh">
+                                                    <option>Select Option</option>
+                                                    <option value="Accepted">Accepted</option>
+                                                    <option value="Declined">Declined</option>
+                                                    <!-- Add more options as needed -->
+                                                </select>
+
                                             </div>
 
                                             <div style="margin-top: 3%;">
@@ -360,7 +356,8 @@
                                             </div>
 
 
-                                        </form> -->
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -439,12 +436,11 @@
             list: [],
             pagination: {},
 
-
             linkText: 'Dashboard',
 
             selectedConsultation: null,
 
-
+            selectedOption:'Select Option'
             };
 
         },
@@ -632,15 +628,53 @@
                         this.pagination = pagination;
                     },
 
+                    
 
-                },
+                    async updateApplication(userVisaApplicationId){
+    
+                        try{
+    
+    
+    
+                            const token = localStorage.getItem('adminlogin');
+                        
+                            const res = await fetch(`https://stagingapp2.fintabng.com/api/v1/admin/updateUserVisaApplication/${userVisaApplicationId}` ,{
+                                method: "PUT",
+                                headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                    status: this.selectedOption,
+                                })
+                            });
+    
+                            if (!res.ok) {
+                                throw new Error('Network was Not ok');
+                            }else {
+                                const data = await res.json();
+                                console.log(data);
+                                window.location.reload();
+    
+                            }
+    
+                        }catch (error) {
+                            console.log('There was a pronlem fetching the list:',error.message);
+                        }
+    
+                    },
+
+        },
 
 
 
 
 
 
-        }
+
+
+    }
     
 
 
