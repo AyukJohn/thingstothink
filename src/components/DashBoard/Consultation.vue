@@ -25,10 +25,52 @@
                                     <td>{{ consultation.processingFee }}</td>
                                     <td v-if="consultation.user">{{ consultation.user.first_name }} {{ consultation.user.last_name }}</td>
                                     <td v-if="consultation.user"> {{ consultation.user.email }} </td>
-                                    <td>....</td>
+                                    <td>
+                                        <!-- Button trigger modal -->
+                                        <button @click="openModal(consultation.id)" class="btn btn-light">
+                                            ....
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+
+
+                        <div class="modal" ref="exampleModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Set Consultation</h5>
+                                        <button @click="closeModal" type="button" class="close btn btn-danger"  aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- <p>Consultation ID: {{ selectedConsultation }}</p> -->
+
+                                        <form @submit.prevent="upDateConsultation(selectedConsultation)">
+
+                                            <div class="form-group">
+                                                <label><h4>Set Time</h4></label>
+                                                <input v-model="time" type="time" class="form-control mt-2"  aria-describedby="emailHelp" placeholder="Time">
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h4>Set Date</h4></label>
+                                                <input v-model="date" type="date" class="form-control mt-2" placeholder="Date">
+                                            </div>
+
+                                            <div style="margin-top: 3%;">
+                                                <button type="submit" class="btn btn-primary">Schedule Consultation</button>
+                                                <button @click="closeModal" type="button" class="btn btn-danger" style="margin-left: 3%;">Close</button>
+                                            </div>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <nav aria-label="Page navigation example" style="margin-left: 60%;">
@@ -49,6 +91,9 @@
 
 
                     </div>
+
+
+                    
     </div>
 </template>
 
@@ -57,16 +102,20 @@
 
     export default{
      
-        name: 'Dashboard',
+        name: 'Consultation',
 
 
-        data() {
+        data:() =>{
             return {
-            currentDate: new Date(),
+                currentDate: new Date(),
 
+                selectedConsultation: null,
 
-            list: [],
-            pagination: {},
+                list: [],
+                pagination: {},
+
+                time:'',
+                date:'',
             };
             
         },
@@ -125,31 +174,50 @@
 
         methods: {
 
+                openModal(consultationId) {
+
+                    console.log("Consultation ID:", consultationId);
+
+                    this.selectedConsultation = consultationId;
+                    this.showModal = true;
+                    this.$refs.exampleModal.classList.add('show');
+                    this.$refs.exampleModal.style.display = 'block';
+                    document.body.classList.add('modal-open');
+                },
+                closeModal() {
+                    this.selectedConsultation = null;
+                    this.showModal = false;
+                    this.$refs.exampleModal.classList.remove('show');
+                    this.$refs.exampleModal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                },
+
+
                 async fetchUserApplication(page_url){
-                try {
+                    try {
 
-                    const token = localStorage.getItem('adminlogin');
-                    page_url = page_url || 'https://stagingapp1.fintabng.com/api/v1/admin/getUserConsultations';
-                    const res = await fetch(page_url ,{
-                        method: "GET",
-                        headers: {
-                            "Accept": "application/json",
-                            "Authorization": `Bearer ${token}`
+                        const token = localStorage.getItem('adminlogin');
+                        page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultations';
+                        const res = await fetch(page_url ,{
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            }
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('Network was Not ok');
                         }
-                    });
-
-                    if (!res.ok) {
-                        throw new Error('Network was Not ok');
-                    }
-                    const data = await res.json();
-                    console.log(data.data);
-                    this.list = data.data;
-                    localStorage.setItem('bookingCount', data.booking_count);
-                    localStorage.setItem('amountInWallet', data.amountAvailable);
+                        const data = await res.json();
+                        console.log(data.data);
+                        this.list = data.data;
+                        localStorage.setItem('bookingCount', data.booking_count);
+                        localStorage.setItem('amountInWallet', data.amountAvailable);
 
 
-                    // console.log(list);
-                    this.makePagination(data.meta, data.links);
+                        // console.log(list);
+                        this.makePagination(data.meta, data.links);
 
                     } catch (error) {
                         console.log('There was a pronlem fetching the list:',error.message);
@@ -170,6 +238,47 @@
                 },
 
 
+
+
+                
+                async upDateConsultation(consultationId){
+
+                    try{
+
+                       const time = this.time;
+                       console.log(time);
+
+
+                        const token = localStorage.getItem('adminlogin');
+                       
+                        const res = await fetch(`https://stagingapp2.fintabng.com/api/v1/admin/upDateConsultation/${consultationId}` ,{
+                            method: "POST",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                time: this.time,
+                                date: this.date
+                            })
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('Network was Not ok');
+                        }else {
+                            const data = await res.json();
+                            console.log(data);
+                            window.location.reload();
+
+                        }
+                    
+                    }catch (error) {
+                        console.log('There was a pronlem fetching the list:',error.message);
+                    }
+
+                },
+                
         },
 
 

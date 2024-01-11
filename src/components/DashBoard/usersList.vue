@@ -84,35 +84,15 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <!-- <button class="btn  btn-small text-light" @click="viewUserDetails(user.id)"  style=" width: 130px; margin-top: 5%; background-color: #D6A12B"> -->
-                                    
-                                    <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" @click="viewUserDetails(user.id)" data-id="user.id"  style="margin-left: 10%; width: 130px; margin-top: 5%; background-color: #D6A12B">
-                                        View Profile
-                                    </router-link>
 
-                                <!-- </button> -->
-
-
-                                <!-- <button @click="viewUserDetails(user.id)">View Profile</button> -->
-
-                                <!-- <router-link to="/dashboard/users/userProfile" class="nav-link" href="#" @click="viewUserDetails(user.id)" data-id="user.id" style="margin-left: 10%; width: 130px; margin-top: 5%; background-color: #D6A12B">
-                                        View Profile
-                                    </router-link> -->
-
-
-                                <!-- <router-link to="/dashboard/users/userProfile" tag="button" class="btn btn-small text-light" @click="viewUserDetails(user.id)" data-id="user.id" style="width: 130px; margin-top: 5%; margin-left: 10%; background-color: #D6A12B">
+                                <button class="btn  btn-small text-light" @click="viewUserProfile(user.id)" style="margin-left: 10%; width: 130px; margin-top: 5%; background-color: #D6A12B">
                                     View Profile
-                                </router-link> -->
+                                </button>
                                 
                             </div>
                             
-                          
-
                         </div>
 
-                        
-
-                        
                     </div>
                     
                 
@@ -158,6 +138,7 @@
 <script>
 
 import { useRouter } from 'vue-router';
+import { mapActions } from "vuex";
 
 
 export default {
@@ -207,7 +188,7 @@ export default {
             try {
 
                 const token = localStorage.getItem('adminlogin');
-                page_url = page_url || 'https://stagingapp1.fintabng.com/api/v1/admin/users';
+                page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/users';
                 const res = await fetch(page_url ,{
                     method: "GET",
                     headers: {
@@ -245,44 +226,51 @@ export default {
         },
 
 
-    //     viewUserDetails(userId) {
-    // store.dispatch('fetchUserProfile', userId);
-    // this.$router.push('/userProfile');
-    //},
-
-
-
-        async viewUserDetails(userId) {
+        ...mapActions(['fetchUserProfile']),
+        
+        async viewUserProfile(userId){
             try {
-                const token = localStorage.getItem('adminlogin');
-                const userDetailsUrl = `https://stagingapp1.fintabng.com/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
+                await this.fetchUserProfile(userId);
+                // Logic after fetching user profile if needed
+                this.$router.push('/dashboard/users/userProfile');
 
-                // console.log(token);
-                const res = await fetch(userDetailsUrl, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!res.ok) {
-                    throw new Error('Network was not okay');
-                }
-
-                const userData = await res.json();
-                var list = userData.user
-
-                console.log('User Details:', list);
-
-                localStorage.setItem('userProfile', JSON.stringify(list));
-                
-                
-                // Process the retrieved user data here
             } catch (error) {
-                console.error('Error fetching user details:', error.message);
+                console.error('Error fetching user profile:', error.message);
             }
         },
+        
+
+        // async viewUserDetails(userId) {
+        //     try {
+        //         const token = localStorage.getItem('adminlogin');
+        //         const userDetailsUrl = `http://127.0.0.1:8000/api/v1/admin/user/${userId}`; // Adjust the URL to fetch user details
+
+        //         // console.log(token);
+        //         const res = await fetch(userDetailsUrl, {
+        //             method: 'GET',
+        //             headers: {
+        //                 Accept: 'application/json',
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         });
+
+        //         if (!res.ok) {
+        //             throw new Error('Network was not okay');
+        //         }
+
+        //         const userData = await res.json();
+        //         var list = userData.user
+
+        //         console.log('User Details:', list);
+
+        //         localStorage.setItem('userProfile', JSON.stringify(list));
+                
+                
+        //         // Process the retrieved user data here
+        //     } catch (error) {
+        //         console.error('Error fetching user details:', error.message);
+        //     }
+        // },
 
 
     },

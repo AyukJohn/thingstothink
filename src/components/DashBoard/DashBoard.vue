@@ -257,10 +257,114 @@
                                     <td>{{ transaction.created_at }}</td>
                                     <td>{{ transaction.status }}</td>
                                     <td>{{ transaction.totalPrice }}</td>
-                                    <td>....</td>
+                                    <td>
+                                        <button @click="openModal(transaction.id)" class="btn btn-light">
+                                            ....
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+
+
+
+                        <div class="modal" ref="exampleModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title text-center">Application Info</h4>
+                                        <button @click="closeModal" type="button" class="close btn btn-danger"  aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <!-- <p>Consultation ID: {{ selectedConsultation }}</p> -->
+                                        <form>
+
+                                            <div class="form-group">
+                                                <label><h6>Email</h6></label>
+                                                <input class="form-control mt-2"  v-model="getTransactionById(selectedConsultation).email" aria-describedby="emailHelp" readonly>
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Phone Number</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).phoneNumber" class="form-control mt-2" readonly>
+                                            </div>
+
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Residential Address</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).residentialAddress" class="form-control mt-2" readonly>
+                                            </div>
+
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Occupation</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).occupation" class="form-control mt-2" readonly>
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Processing Fee</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).processingFee" class="form-control mt-2" readonly>
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Visa Fee</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).visaFee" class="form-control mt-2" readonly>
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h6>Reference</h6></label>
+                                                <input  v-model="getTransactionById(selectedConsultation).reference" class="form-control mt-2" readonly>
+                                            </div>
+
+
+
+
+                                            <h6 class="mt-4">Images</h6>
+                                            <div v-if="getTransactionById(selectedConsultation).image">
+                                                <div v-for="(image, index) in getTransactionById(selectedConsultation).image" :key="index" class="d-flex justify-content-center mt-3">
+                                                    <img v-if="image.url" :src="image.url" alt="Transaction Image" class="image">
+                                                </div>
+                                            </div>
+
+
+                                            <div style="margin-top: 3%;">
+                                                <!-- <button type="submit" class="btn btn-primary">Schedule Consultation</button> -->
+                                                <button @click="closeModal" type="button" class="btn btn-danger">Close</button>
+                                            </div>
+
+                                        </form>
+
+
+
+
+
+
+                                        <!-- <form @submit.prevent="upDateConsultation(selectedConsultation)">
+
+                                            <div class="form-group">
+                                                <label><h4>Set Time</h4></label>
+                                                <input v-model="time" type="time" class="form-control mt-2"  aria-describedby="emailHelp" placeholder="Time">
+                                            </div>
+
+                                            <div class="form-group mt-4">
+                                                <label><h4>Set Date</h4></label>
+                                                <input v-model="date" type="date" class="form-control mt-2" placeholder="Date">
+                                            </div>
+
+                                            <div style="margin-top: 3%;">
+                                                <button type="submit" class="btn btn-primary">Schedule Consultation</button>
+                                                <button @click="closeModal" type="button" class="btn btn-danger" style="margin-left: 3%;">Close</button>
+                                            </div>
+
+
+                                        </form> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <nav aria-label="Page navigation example" style="margin-left: 60%;">
@@ -336,7 +440,10 @@
             pagination: {},
 
 
-            linkText: 'Dashboard'
+            linkText: 'Dashboard',
+
+            selectedConsultation: null,
+
 
             };
 
@@ -446,6 +553,31 @@
 
         methods:{
 
+
+            getTransactionById(consultationId) {
+                return this.list.find(transaction => transaction.id === consultationId) || {};
+            },
+
+            openModal(consultationId) {
+
+            console.log("Consultation ID:", consultationId);
+
+            this.selectedConsultation = consultationId;
+            this.showModal = true;
+            this.$refs.exampleModal.classList.add('show');
+            this.$refs.exampleModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+            },
+
+            closeModal() {
+            this.selectedConsultation = null;
+            this.showModal = false;
+            this.$refs.exampleModal.classList.remove('show');
+            this.$refs.exampleModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            },
+
+
             logout(){
                 localStorage.removeItem('adminlogin');
                 this.$router.push({name:'admin'})
@@ -459,7 +591,7 @@
                     try {
 
                         const token = localStorage.getItem('adminlogin');
-                        page_url = page_url || 'https://stagingapp1.fintabng.com/api/v1/admin/getUserVisaApplications';
+                        page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserVisaApplications';
 
                         const res = await fetch(page_url ,{
                             method: "GET",
@@ -519,6 +651,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 
+    .image{
+        width: 300px;
+    }
 
     .clickable{
         cursor: pointer;

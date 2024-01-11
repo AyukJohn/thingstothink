@@ -25,46 +25,65 @@
                                 
                                     <div class="wrapper">
                                         <div class="usernameWrapper">
-                                            <h5  class="userName" v-if="userProfile">{{ userProfile.first_name }} {{ userProfile.last_name }}</h5>
-                                            <h6 class="userID">User ID: {{ userProfile.id }}</h6>
-                                            <div v-if="userProfile.verified === 'Yes'" class="d-flex align-items-center">
-                                                <p class=" userVerified">Verified</p>
-                                                <img class="img2 verifiedTick" src="@/assets/verified.svg" alt="Verified Icon">
+
+                                            <div v-if="userProfile">
+                                                <!-- <img :src="userProfile.image || ''" alt="User Profile Image"> -->
+                                                <h5 class="userName">{{ userProfile.first_name }} {{ userProfile.last_name }}</h5>
+                                                
+                                                
+                                                <div class=""> 
+                                                    <div v-if="userProfile.verified === 'Yes'" class="d-flex align-items-center">
+                                                        <img class="img2" src="@/assets/verified.svg" alt="Verified Icon" style="margin-left: 4%;">
+                                                        <h6 class="mt-2">Verified</h6>
+                                                    </div>
+                                                </div>
+                                                
+                                                <h6 class="userID">User ID: {{ userProfile.id }}</h6>
+
                                             </div>
+
+
+                                           
                                         </div>
                                     </div>
             
 
                                     <div class="wrapper2" v-if="!isUserConsultationRoute">
-                                        <form>
-                                            <div class="container">
+                                        <div v-if="userProfile">
+
+                                        
+                                            <form>
                                                 <div class="container">
-                                                    <div class="row pt-5">
-                                                        <div class="col-md-6 ml-5">
-            
-                                                            <label for="" class="mb-2">Full Name</label>
-                                                            <input type="text" :value="userProfile.first_name + ' ' + userProfile.last_name"   class="form-control py-3" placeholder="First name">
-                                                            
-                                                        </div>
-                    
-                                                        <div class="col-md-6">
-                                                            <label for="" class="mb-2">Email</label>
-                                                            <input type="text" v-model="userProfile.email"  class="form-control py-3" placeholder="Last name">
-                                                        </div>
-                    
-                                                        <div class="col-md-6 mt-5">
-                                                            <label for="" class="mb-2">Phone Number</label>
-                                                            <input type="text" v-model="userProfile.phone_number"  class="form-control py-3" placeholder="Last name">
-                                                        </div>
-                    
-                                                        <div class="col-md-6 mt-5"> 
-                                                            <label for="" class="mb-2">Referral Code</label>
-                                                            <input type="text" v-model="userProfile.referralCode" class="form-control py-3" placeholder="Last name">
+                                                    <div class="container">
+                                                        <div class="row pt-5">
+                                                            <div class="col-md-6 ml-5">
+                
+                                                                <label for="" class="mb-2">Full Name</label>
+                                                                <input type="text" :value="userProfile.first_name + ' ' + userProfile.last_name"   class="form-control py-3" placeholder="First name" readonly>
+                                                                
+                                                            </div>
+                        
+                                                            <div class="col-md-6">
+                                                                <label for="" class="mb-2">Email</label>
+                                                                <input type="text" v-model="userProfile.email"  class="form-control py-3" placeholder="Last name" readonly>
+                                                            </div>
+                        
+                                                            <div class="col-md-6 mt-5">
+                                                                <label for="" class="mb-2">Phone Number</label>
+                                                                <input type="text" v-model="userProfile.phone_number"  class="form-control py-3" placeholder="Last name" readonly>
+                                                            </div>
+                        
+                                                            <div class="col-md-6 mt-5"> 
+                                                                <label for="" class="mb-2">Referral Code</label>
+                                                                <input type="text" v-model="userProfile.referralCode" class="form-control py-3" placeholder="Last name" readonly>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </form>
+                                            </form>
+
+                                        </div>
+                                        
                                     </div>
 
                                    
@@ -123,7 +142,9 @@
                         
 
                         <!-- Button trigger modal -->
-                       
+                        <!-- <button @click="openModal" class="btn btn-primary">
+                            Launch demo modal
+                        </button> -->
 
 
                         <div class="modal" ref="exampleModal" tabindex="-1" role="dialog">
@@ -167,36 +188,37 @@
 <script>
 // import { mapActions } from 'vuex';
 
+import { mapGetters } from 'vuex';
+
 
  export default{
 
     data() {
         return {
-            userProfile:{
-                first_name: '',
-                last_name: ''
-            }
+            userProfile:null
         }
     },
 
 
-    computed: {
-            isUserConsultationRoute(){
-                return this.$route.path.includes('/userConsult');
-            },
-    },
+    computed:{
+        ...mapGetters(['getUserProfile']),
+        userProfile() {
+            return this.getUserProfile; // Ensure proper mapping
+        },
 
+        isUserConsultationRoute() {
+            return this.$route.path.includes('/dashboard/users/userProfile/userConsultation');
+        },
+    },
 
 
     mounted() {
-        let userProfile = localStorage.getItem('userProfile');
-        if (userProfile) {
-           this.userProfile = JSON.parse(userProfile);
-            console.log(userProfile);
-        } else {
-            console.log('No user profile found in localStorage');
-        }
+        console.log('User Profile:', this.userProfile);
+        // Perform other operations using this.userProfile data
     },
+
+
+
 
     methods: {
 
@@ -231,7 +253,7 @@
         async viewUserConsultation(userId) {
             try {
                 const token = localStorage.getItem('adminlogin');
-                const userDetailsUrl = `https://stagingapp1.fintabng.com/v1/admin/getUserConsultationById/${userId}`; // Adjust the URL to fetch user details
+                const userDetailsUrl = `https://stagingapp2.fintabng.com/api/v1/admin/getUserConsultationById/${userId}`; // Adjust the URL to fetch user details
 
                 // console.log(token);
                 const res = await fetch(userDetailsUrl, {
