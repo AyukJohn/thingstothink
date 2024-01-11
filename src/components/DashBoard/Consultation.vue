@@ -13,7 +13,7 @@
                                 <th scope="col">Consultation_Price</th>
                                 <th scope="col">Customer</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">....</th>
+                                <th scope="col">...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -28,7 +28,7 @@
                                     <td>
                                         <!-- Button trigger modal -->
                                         <button @click="openModal(consultation.id)" class="btn btn-light">
-                                            ....
+                                            ...
                                         </button>
                                     </td>
                                 </tr>
