@@ -433,7 +433,7 @@
 
             userCount: 0, 
             BookingCount: 0, 
-            // amountInWallet: [],
+            amountInWallet: 0,
             adminName:null,
 
             list: [],
@@ -532,10 +532,10 @@
             }
 
 
-            const amountInWallet = localStorage.getItem('amountInWallet');
-            if (amountInWallet) {
-                this.amountInWallet = amountInWallet; // Convert to number
-            }
+            // const amountInWallet = localStorage.getItem('amountInWallet');
+            // if (amountInWallet) {
+            //     this.amountInWallet = amountInWallet; // Convert to number
+            // }
 
 
             let adminName = localStorage.getItem('adminName');
@@ -608,6 +608,7 @@
                         const data = await res.json();
                         console.log(data);
                         this.list = data.data;
+                        this.amountInWallet = data.amountAvailable;
                         localStorage.setItem('applicationCount', data.application_count);
 
                         // console.log(list);
