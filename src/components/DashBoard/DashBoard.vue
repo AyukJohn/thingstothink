@@ -77,7 +77,15 @@
                 <div class="collapse navbar-collapse" id="collapsibleNavId">
                     
                     <form class="form-inline my-2 my-lg-0" style="margin-left: 40% !important;">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+                        <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search"> -->
+
+                        <input
+                            class="form-control mr-sm-2"
+                            type="text"
+                            placeholder="Search"
+                            v-model="searchQuery"
+                            @input="handleSearch"
+                        />
                     </form>
 
 
@@ -515,6 +523,7 @@
             };
 
             this.fetchUserApplication()
+            this.fetchAmountInWallet()
 
             const storedUserCount = localStorage.getItem('userCount');
             if (storedUserCount){
@@ -544,7 +553,7 @@
             let adminName = localStorage.getItem('adminName');
             if (adminName) {
             this.adminName = JSON.parse(adminName);
-                console.log(adminName);
+                // console.log(adminName);
             } else {
                 console.log('No user profile found in localStorage');
             }
@@ -563,7 +572,7 @@
 
             openModal(consultationId) {
 
-            console.log("Consultation ID:", consultationId);
+            // console.log("Consultation ID:", consultationId);
 
             this.selectedConsultation = consultationId;
             this.showModal = true;
@@ -586,6 +595,26 @@
                 this.$router.push({name:'admin'})
 
                 this.isLoggedIn = false;
+            },
+
+
+
+            handleSearch() {
+                // Filter the list based on the search query
+                this.filteredList = this.list.filter((transaction) =>
+                    this.includesSearchQuery(transaction)
+                );
+            },
+
+            
+            includesSearchQuery(transaction) {
+                // Check if the search query is present in any relevant property of the transaction
+                const query = this.searchQuery.toLowerCase();
+                return (
+                    // transaction.email.toLowerCase().includes(query) || 
+                    transaction.status.toLowerCase().includes(query),
+                    console.log(transaction)
+                )
             },
 
 
@@ -621,10 +650,10 @@
                         }
                         
                         const data = await res.json();
-                        console.log(data);
+                        // console.log(data);
                         this.list = data.data;
                         this.amountInWallet = data.amountAvailable;
-                        localStorage.setItem('applicationCount', data.application_count);
+                        localStorage.setItem('applicationCount', data.meta.total);
 
                         // console.log(list);
                         this.makePagination(data.meta, data.links);
@@ -633,7 +662,7 @@
                             console.log('There was a pronlem fetching the list:',error.message);
                         }
 
-                    },
+                },
 
 
                     makePagination(meta, links) {
@@ -674,7 +703,7 @@
                                 throw new Error('Network was Not ok');
                             }else {
                                 const data = await res.json();
-                                console.log(data);
+                                // console.log(data);
                                 window.location.reload();
     
                             }
@@ -683,6 +712,36 @@
                             console.log('There was a pronlem fetching the list:',error.message);
                         }
     
+                    },
+
+
+
+
+
+                    async fetchAmountInWallet(page_url){
+                        try {
+                            const token = localStorage.getItem('adminlogin');
+                            page_url = 'https://stagingapp2.fintabng.com/api/v1/admin/amountInWallet';
+
+                            const res = await fetch(page_url ,{
+                                method: "GET",
+                                headers: {
+                                    "Accept": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                                }
+                            });
+
+                            if (!res.ok) {
+                                throw new Error('Network was Not ok');
+                            }
+                            
+                            const data = await res.json();
+                            console.log(data.amountInWallet);
+                            this.amountInWallet = data.amountInWallet;
+
+                        } catch (error) {
+                            console.log('There was a pronlem :',error.message);
+                        }
                     },
 
         },

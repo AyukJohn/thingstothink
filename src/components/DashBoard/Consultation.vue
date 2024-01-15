@@ -232,9 +232,9 @@
                             throw new Error('Network was Not ok');
                         }
                         const data = await res.json();
-                        console.log(data.links);
+                        // console.log(data.meta.data);
                         this.list = data.data;
-                        localStorage.setItem('bookingCount', data.booking_count);
+                        localStorage.setItem('bookingCount', data.meta.total);
                         localStorage.setItem('amountInWallet', data.amountAvailable);
 
 
@@ -290,7 +290,7 @@
                             throw new Error('Network was Not ok');
                         }else {
                             const data = await res.json();
-                            console.log(data);
+                            // console.log(data);
                             window.location.reload();
 
                         }

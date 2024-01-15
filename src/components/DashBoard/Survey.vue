@@ -157,7 +157,7 @@
 
                 getPageUrl(page) {
                 // Customize the URL based on your API response structure
-                return `https://stagingapp2.fintabng.com/api/v1/admin/getUserSurveys?page=${page}`;
+                return `http://127.0.0.1:8000/api/v1/admin/getUserSurveys?page=${page}`;
                 },
 
 
@@ -166,7 +166,7 @@
                 try {
 
                     const token = localStorage.getItem('adminlogin');
-                    page_url = page_url || 'https://stagingapp2.fintabng.com/api/v1/admin/getUserSurveys';
+                    page_url = page_url || 'http://127.0.0.1:8000/api/v1/admin/getUserSurveys';
                     const res = await fetch(page_url ,{
                         method: "GET",
                         headers: {
@@ -179,9 +179,9 @@
                         throw new Error('Network was Not ok');
                     }
                     const data = await res.json();
-                    console.log(data.surveys);
+                    // console.log(data.surveys);
                     this.list = data.data;
-                    localStorage.setItem('surveyCount', data.survey_count);
+                    localStorage.setItem('surveyCount', data.meta.total);
                  
 
                     // console.log(list);

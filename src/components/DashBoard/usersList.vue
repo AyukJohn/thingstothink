@@ -103,16 +103,20 @@
                     <nav aria-label="Page navigation example" style="margin-left: 60%;">
                         <ul class="pagination">
                             <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
-                            <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.prev_page_url)">Previous</a>
-                        </li>
-                        
-                        <li class="page-item disabled">
-                            <a class="page-link text-dark" href="#">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+                                <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.prev_page_url)">Previous</a>
                             </li>
+                        
+                            <li class="page-item disabled">
+                                <a class="page-link text-dark" href="#">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+                            </li>
+
+                                <!-- <li v-for="page in getPages()" :key="page" v-bind:class="[{ active: pagination.current_page === page }]" class="page-item">
+                                    <a class="page-link" href="#" @click.prevent="fetchUserList(getPageUrl(page))">{{ page }}</a>
+                                </li> -->
                             
                             <li v-bind:class="[{ disabled: !pagination.next_page_url }]" class="page-item">
-                            <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.next_page_url)">Next</a>
-                        </li>
+                                <a class="page-link" href="#" @click.prevent="fetchUserList(pagination.next_page_url)">Next</a>
+                            </li>
                         </ul>
                     </nav>
 
@@ -184,6 +188,18 @@ export default {
             this.showDropdown = false;
         },
 
+
+                getPages() {
+                    const startPage = Math.max(1, this.pagination.current_page - 2);
+                    const endPage = Math.min(this.pagination.last_page, startPage + 4);
+                    return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+                },
+
+                getPageUrl(page) {
+                    // Customize the URL based on your API response structure
+                    return `https://stagingapp2.fintabng.com/api/v1/admin/getUserSurveys?page=${page}`;
+                },
+
         async fetchUserList(page_url){
             try {
 
@@ -203,8 +219,8 @@ export default {
                 const data = await res.json();
                 // console.log(data.user_count);
                 this.userList = data.data;
-                console.log(data.data);
-                localStorage.setItem('userCount', data.user_count);
+                // console.log(data.data);
+                localStorage.setItem('userCount', data.meta.total);
 
                 this.makePagination(data.meta, data.links);
 

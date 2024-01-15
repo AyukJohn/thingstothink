@@ -28,7 +28,7 @@ const userProfileModule = {
         }
 
         const userData = await res.json();
-        console.log(userData);
+        // console.log(userData);
         commit('SET_USER_PROFILE', userData.user);
       } catch (error) {
         console.error('Error fetching user details:', error.message);
