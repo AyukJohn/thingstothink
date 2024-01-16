@@ -51,7 +51,7 @@
 
 
 
-                <li  @click="logout" class="clickable" style="margin-top: 200%;">
+                <li  @click="logout" class="clickable btn btn-small" style="margin-top: 200%; background-color: #dadada;">
                     <img class="img2"  src="../icons/logout.svg" alt="" >
                     logout
                 </li>
@@ -109,26 +109,7 @@
                             <p style="color: #64748B;">Administrator</p>
                         </div>
 
-
-
-
-                        <div class="d-inline-block align-self-center dropdown" style="margin-left: 20% !important;">
-                            <div class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <!-- <div>                                
-                                <img class="img2" src="../icons/chevron-down.svg" alt="">
-                                </div> -->
-                            </div>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Separated link</a></li>
-                            </ul>
-                        </div>
-
-
-
+                      
                         
 
 
@@ -208,7 +189,7 @@
                                             </a>
                                             
                                             <button class="btn  btn-small text-light" style="margin-left: 55%; background-color: #D6A12B">
-                                                <router-link to="/dashboard/survey" class="nav-link" href="#">View</router-link>                                     
+                                                <router-link to="/dashboard/survey" class="nav-link" href="#">View All</router-link>                                     
                                             </button>
                                         </div>
                                         <h5 class="card-title mt-3">Surveys</h5>
@@ -237,11 +218,12 @@
 
 
                     <div class="container mt-5">
-                        <div class="d-flex">
+                        <div class="d-flex justify-content-between">
                             <h5>Recent Transactions</h5>
-                            <a href="#" class="btn btn-light" style="margin-left: 73%;"><h6>all transaction</h6></a>
+                            <!-- <a href="#" class="btn btn-light" style="margin-left: 73%;"><h6>all transaction</h6></a> -->
+                            <button class="btn btn-light"><h6>All Transactions</h6></button>
                         </div>
-                       
+                        
                         <table class="table mt-3">
                             <thead>
                                 <tr>
@@ -359,7 +341,14 @@
                                             </div>
 
                                             <div style="margin-top: 3%;">
-                                                <button type="submit" class="btn btn-primary">Schedule Consultation</button>
+                                                <button type="submit" class="btn btn-primary" :disabled="loading">
+                                                    <span v-if="loading">
+                                            
+                                                        <div class="loader"></div>
+                                                    </span>
+                                                    <span v-else>Submit</span>
+                                                </button>
+
                                                 <button @click="closeModal" type="button" class="btn btn-danger" style="margin-left: 3%;">Close</button>
                                             </div>
 
@@ -372,7 +361,7 @@
                         </div>
 
 
-                        <nav aria-label="Page navigation example" style="margin-left: 60%;">
+                        <nav aria-label="Page navigation example" style="margin-left: 60%;w">
                             <ul class="pagination">
                                 <li v-bind:class="[{ disabled: !pagination.prev_page_url }]" class="page-item">
                                     <a class="page-link" href="#" @click.prevent="fetchUserApplication(pagination.prev_page_url)"> &lt </a>
@@ -433,29 +422,40 @@
 
 <script>
 
+    import Loader from '../extras/Loader.vue';
+    import Dropdown from './DropDown.vue'
+
     export default{
      
         name: 'Dashboard',
 
+        components:{
+            Loader,
+            Dropdown
+        },
+
 
         data(){
             return{
-            currentDate: new Date(),
 
+                currentDate: new Date(),
 
-            userCount: 0, 
-            BookingCount: 0, 
-            amountInWallet: 0,
-            adminName:null,
+                userCount: 0, 
+                BookingCount: 0, 
+                amountInWallet: 0,
+                adminName:null,
 
-            list: [],
-            pagination: {},
+                list: [],
+                pagination: {},
 
-            linkText: 'Dashboard',
+                linkText: 'Dashboard',
 
-            selectedConsultation: null,
+                selectedConsultation: null,
 
-            selectedOption:'Select Option'
+                selectedOption:'Select Option',
+                loading: false,
+
+                
             };
 
         },
@@ -652,7 +652,6 @@
                         const data = await res.json();
                         // console.log(data);
                         this.list = data.data;
-                        this.amountInWallet = data.amountAvailable;
                         localStorage.setItem('applicationCount', data.meta.total);
 
                         // console.log(list);
@@ -682,10 +681,8 @@
                     async updateApplication(userVisaApplicationId){
     
                         try{
-    
-    
-    
                             const token = localStorage.getItem('adminlogin');
+                            this.loading = true;
                         
                             const res = await fetch(`https://stagingapp2.fintabng.com/api/v1/admin/updateUserVisaApplication/${userVisaApplicationId}` ,{
                                 method: "PUT",
@@ -710,6 +707,8 @@
     
                         }catch (error) {
                             console.log('There was a pronlem fetching the list:',error.message);
+                        }finally {
+                            this.loading = false; // Set loading to false after the request is complete (success or error)
                         }
     
                     },
@@ -852,9 +851,10 @@
 
 
     .page-item{
-        width: 10% !important;
+        width: 8% !important;
         margin-right: 1%;
         text-align: center;
+
     }
 
 

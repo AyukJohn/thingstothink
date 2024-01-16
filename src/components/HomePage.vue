@@ -67,8 +67,8 @@
 
                                 <button type="submit" class="btn col-md-12" :disabled="loading">
                                         <span v-if="loading">
-                                            <!-- Display the loader while loading is true -->
-                                            <Loader :isLoading="loading" />
+                                            
+                                            <div class="loader"></div>
                                         </span>
                                         <span v-else>Sign In</span>
                                 </button>
@@ -97,13 +97,16 @@
     
 </script> -->
 
-<script lang="ts">
-
-    import Loader from './extras/Loader.vue';
+<script>
+    import Loader from './extras/Loader.vue'
 
 
     export default {
         name:'HomePage',
+
+        components:{
+            Loader,
+        },
 
         data:() =>{
             return{
@@ -115,9 +118,12 @@
         },
 
 
+
+
         methods: {
             async loginAdmin() {
                 try {
+                    this.loading = true;
                     const response = await fetch("https://stagingapp2.fintabng.com/api/v1/admin/loginAdmin", {
                         method: "POST",
                         headers: {
@@ -148,7 +154,7 @@
                     console.error("Error:", error);
                     this.error = "An error occurred. Please try again.";
                 } finally {
-                    this.loading = false;
+                    this.loading = false; // Set loading to false after the request is complete (success or error)
                 }
             }
         },
@@ -210,6 +216,26 @@
     font-weight: 1000;
 }
 
+
+
+
+.loader {
+  width: 40px;
+  margin-left: 40%;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #030303;
+  --_m: 
+    conic-gradient(#f4080800 30%,#ff9595),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}
 
 
 </style>
