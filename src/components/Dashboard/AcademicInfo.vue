@@ -78,7 +78,7 @@
 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Faculty of Computing Syllabus
+                    Faculty oF Computing Syllabus
                 </button>
         </div>
 
