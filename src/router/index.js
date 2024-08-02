@@ -1,110 +1,57 @@
-/*eslint-disable*/
-import { createRouter,createWebHashHistory} from "vue-router";
-
-
-import Admin from '../components/HomePage.vue'
-import DashBoard from '../components/DashBoard/DashBoard.vue'
-import Users from '../components/DashBoard/usersList.vue'
-import Consultation from '../components/DashBoard/Consultation.vue'
-import Survey from '../components/DashBoard/Survey.vue'
-import Profile from '../components/DashBoard/userProfile.vue'
-import UserConsultation from '../components/DashBoard/userConsultation.vue'
-
-
-
-
-// import Loader from '../components/extras/Loader.vue'
-
-
-
-
-const routes = [
-
-    {
-      path: "/",
-      name: "admin",
-      component: Admin,
-    //   meta: {auth:false}
-    },
-
-    {
-        path: "/dashboard",
-        name: "dashboard",
-        component: DashBoard,
-        children: [
-
-          {
-            path: "consultation",
-            name: "consultation",
-            component: Consultation,
-          },
-
-          {
-            path: "users",
-            name: "users",
-            component: Users,
-            children:[
-
-                {   path: ":userId",
-                    name: "userProfile",
-                    component: Profile,
-                    // props: true, 
-                    children:[
-
-                      {
-                        path: "userConsultation",
-                        name: "userConsultation",
-                        component: UserConsultation,
-                        // props: true,
-                      },
-
-
-                    ]
-
-                },
-
-            ]
-          },
-
-          {
-            path: "survey",
-            name: "survey",
-            component: Survey,
-          },
-
-        ]
-    },
-
-    // {
-    //     path: "/users",
-    //     name: "users",
-    //     component: Users,
-    // },
-
-    // {
-    //   path: "/consultation",
-    //   name: "consultation",
-    //   component: Consultation,
-    // },
-
-
-    // {
-    //   path: "/loader",
-    //   name: "loader",
-    //   component: Loader,
-    // },
-
-
-];
-
+import { createRouter, createWebHistory } from 'vue-router'
+import LoginPage from "@/components/Auth/LoginPage.vue"
+import MainPage from '@/components/Dashboard/MainPage.vue'
+import DashboardPage from '@/components/Dashboard/DashboardPage.vue'
+import StudentInfo from '@/components/Dashboard/StudentInfo.vue'
+import FacultyInfo from '@/components/Dashboard/FacultyInfo.vue'
+import AcademicsInfo from "@/components/Dashboard/AcademicInfo.vue"
 
 
 
 const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+      {
+        path: '/',
+        name: 'login',
+        component: LoginPage
+      },
+      
+      {
+        path: '/main',
+        name: 'mainpage',
+        component: MainPage,
+        children: [
+          
+          {
+            path: '/dashboard',
+            name: 'dashboard',
+            component: DashboardPage,
+          },
 
-    history: createWebHashHistory(),
-    routes,
+          {
+            path: '/studentInfo',
+            name: 'studentInfo',
+            component: StudentInfo,
+          },
 
+          {
+            path: '/facultyInfo',
+            name: 'facultyInfo',
+            component: FacultyInfo,
+          },
+
+          {
+            path: '/academicsInfo',
+            name: 'academicsInfo',
+            component:AcademicsInfo
+          },
+
+        ]
+      }
+  ]
 })
 
-export default router;
+
+
+export default router
